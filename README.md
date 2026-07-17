@@ -18,6 +18,17 @@ This project documents a from-scratch build of a private, multi-user server moni
 - Fully automated deployment and redeployment via Ansible + systemd
 
 ---
+### Server Status
+![Server Status](PNGs/server_down.png)
+
+### Admin Panel
+![Admin Panel](PNGs/admin_panel.png)
+
+### Admin Broadcast Feature
+![Admin Broadcast](PNGs/admin_broadcast.png)
+
+### Help Menu
+![Help Menu](PNGs/help.png)
 
 ## 🏗️ Architecture
 
