@@ -1,0 +1,6 @@
+*.secret
+inventory/group_vars/all.yml
+monitor-bot/monitoring.db
+__pycache__/
+*.pyc
+.venv/

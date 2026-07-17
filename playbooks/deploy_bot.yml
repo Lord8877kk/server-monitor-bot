@@ -1,0 +1,55 @@
+- name: Deploy Monitor Bot & remove old stack
+  hosts: monitoring_server
+  become: yes
+  tasks:
+
+    
+    - name: Remove old monitoring folder
+      file:
+        path: /opt/monitoring
+        state: absent
+
+    - name: Create bot directory
+      file:
+        path: /opt/monitor-bot
+        state: directory
+        owner: ubuntu
+        mode: '0755'
+
+    - name: Copy bot files
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: ubuntu
+        mode: '0644'
+      loop:
+        - { src: ../monitor-bot/bot.py,          dest: /opt/monitor-bot/bot.py }
+        - { src: ../monitor-bot/requirements.txt, dest: /opt/monitor-bot/requirements.txt }
+
+    - name: Install python3-venv
+      apt:
+        name: python3-venv
+        update_cache: yes
+
+    - name: Create virtual environment
+      command: python3 -m venv /opt/monitor-bot/venv
+      args:
+        creates: /opt/monitor-bot/venv
+
+    - name: Install Python dependencies
+      pip:
+        requirements: /opt/monitor-bot/requirements.txt
+        virtualenv: /opt/monitor-bot/venv
+
+    - name: Install systemd service
+      copy:
+        src: ../monitor-bot/monitor-bot.service
+        dest: /etc/systemd/system/monitor-bot.service
+        mode: '0644'
+
+    - name: Enable and start bot service
+      systemd:
+        name: monitor-bot
+        enabled: yes
+        state: restarted
+        daemon_reload: yes
